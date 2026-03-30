@@ -14,6 +14,14 @@ Key capabilities include:
 - NAS with direct HBA passthrough (TrueNAS)
 - Isolated lab network with multi-device access
 
+# Design Decisions
+
+- Designed node roles (compute, storage, services) to allow for future scaling
+- Used LXC containers for lightweight, efficient service deployment
+- Separated AI compute from user services to prevent resource contention and improve system responsiveness
+- Used ZFS mirror for redundancy and integrity
+- Centralized model storage to avoid duplication and ensure persistence
+
 # Hardware
 Elite-Node (Primary Service Node):
 - HP EliteDesk Mini 705 G4
@@ -89,6 +97,7 @@ AI Infrastructure:
   - Ubuntu 22.04 LXC container
   - Uses ROCm 6.3 (last supported version for Mi60)
   - Uses Stable Diffusion XL
+
 
 # Goals
 
