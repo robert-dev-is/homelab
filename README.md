@@ -30,7 +30,7 @@ NAS-Node-01:
 - Proxmox VE 9.1.6
 - M.2 Oculink to Oculink eGPU dock used for HBA
 - 9300-8i LSI HBA passed through to TrueNAS vm in Proxmox
-- 2x Western Digital 14TB Ultrastar HDD
+- 2x Western Digital 14TB Ultrastar HDD in ZFS Mirror
 
 AI-Node-01
 - AMD Ryzen 3600
@@ -39,3 +39,33 @@ AI-Node-01
 - 1TB Crucial P310 NVME
 - Proxmox VE 9.1.6
 - Hosts llama and diffusion LXC containers with Mi60 exposed to them
+
+# Network Design
+
+- 2.5GbE internal network
+- Static IP scheme (192.168.4.x to 10.10.10.x)
+- OpenWRT router
+
+# Key Projects
+
+Virtualization:
+
+NAS/Storage:
+
+AI Infrastructure:
+- Models are stored on AI-Node-01's drive in dedicated folders and LXC Containers mount to the needed folders to access models
+  - This ensures duplicate models are not downloaded on LXC Containers and dare secure if container needs to go back to a snapshot or container becomes corrupted
+- Local LLM hosting via llama.cpp
+  - LXC Container with Ubuntu 24.04 template using Vulkan as it provided similar performance to ROCm for inference
+- OpenWebUI hosted on Elite-Node instead of AI-Node-01
+  - LXC Container with Debian 12.13 template that also uses PostgreSQL to store chats instead of relying on browser cache
+  - This allows for chats to be accessed on multiple devices
+  - Models are pulled from port broadcasted by AI-Node-01's llama service
+  - Daily backups are run at 4AM, keeps last 14 backups, and are saved to NAS
+ - Image Generation service hosted by ComfyUI
+  - LXC Container with Ubuntu 22.04 template using ROCm 6.3 as it's the last official version supported for the Mi60
+  - Uses Stable Diffusion XL as main model for image generation
+
+# Goals
+
+# Future Plans
