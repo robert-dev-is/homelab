@@ -35,7 +35,7 @@ NAS-Node-01 (Storage Node):
 
 AI-Node-01 (AI Compute Node):
 - AMD Ryzen 3600
-- AMD Radeon Instinct Mi60 32GB
+- AMD Radeon Instinct Mi60 32GB (175w power limit)
 - 32GB DDR4
 - 1TB Crucial P310 NVME
 - Proxmox VE 9.1.6
