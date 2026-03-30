@@ -2,16 +2,17 @@
 This repository documents my personal homelab environment focused on virtualization, networking, storage, and local AI workloads.
 
 # Overview
-This lab is designed to simulate real-world enterprise infrastructure while experimenting with real world technolgies such as:
+This lab is designed to simulate real-world enterprise infrastructure while exploring modern technologies in virtualization, networking, storage, and local AI workloads.
+
+Key capabilities include:
 
 - Proxmox VE 9.1.6 virtualization cluster
-- Offline and local services
-- Local AI inference using llama.cpp and OpenWebUI
-- Local AI image generation using diffusion
-- LXC Containers to run services
-- NAS with HBA Passthrough
-- Designated lab network
-- Ability to access services from other devices on the lab's network (main pc, laptop, phone)
+- Fully local/offline-capable services
+- Local AI inference (llama.cpp + OpenWebUI)
+- Local AI image generation (Stable Diffusion via ComfyUI)
+- LXC based service deployment
+- NAS with direct HBA passthrough (TrueNAS)
+- Dedicated lab network with multi-device access
 
 # Hardware
 Elite-Node:
@@ -49,23 +50,50 @@ AI-Node-01
 # Key Projects
 
 Virtualization:
+- Multi node cluster using Proxmox VE 9.1.6
+- Ability to easily create and manage virtual machines and containers to run services
+- Transitioned old services, such as nas and ai inference, from bare-metal Ubuntu to Proxmox for better management
+- Use Proxmox monitoring/logs for basic statistics and Netdata for more in depth monitoring
 
 NAS/Storage:
+- TrueNAS VM with HBA passed through to allow direct access to hdds
+- Network file shares via SMB for storage and backups (such as Proxmox backups)
 
 AI Infrastructure:
-- Models are stored on AI-Node-01's drive in dedicated folders and LXC Containers mount to the needed folders to access models
-  - This ensures duplicate models are not downloaded on LXC Containers and dare secure if container needs to go back to a snapshot or container becomes corrupted
+- Models are stored centrally on AI-Node-01 and mounted into LXC containers
+  - Prevents duplicate downloads
+  - Protects models from container resets or corruption
+
 - Local LLM hosting via llama.cpp
-  - LXC Container with Ubuntu 24.04 template using Vulkan as it provided similar performance to ROCm for inference
-- OpenWebUI hosted on Elite-Node instead of AI-Node-01
-  - LXC Container with Debian 12.13 template that also uses PostgreSQL to store chats instead of relying on browser cache
-  - This allows for chats to be accessed on multiple devices
-  - Models are pulled from port broadcasted by AI-Node-01's llama service
-  - Daily backups are run at 4AM, keeps last 14 backups, and are saved to NAS
+  - Ubuntu 24.04 LXC Container
+  - Uses Vulkan for inference (comparable performance to ROCm as of 2026)
+
+- OpenWebUI hosted on Elite-Node
+  - Debian 12.13 LXC container
+  - Uses PostgreSQL for persistent chat storage
+  - Allows for chats to be accessed across devices
+  - Connects to llama.cpp service hosted on AI-Node-01
+  
+- Automated backups
+  - Daily at 4AM
+  - Retains last 14 backups
+  - Stored on NAS
+
 - Image Generation service hosted by ComfyUI
-  - LXC Container with Ubuntu 22.04 template using ROCm 6.3 as it's the last official version supported for the Mi60
-  - Uses Stable Diffusion XL as main model for image generation
+  - Ubuntu 22.04 LXC container
+  - Uses ROCm 6.3 (last supported version for Mi60)
+  - Uses Stable Diffusion XL
 
 # Goals
 
+- Build a scalable, local infrastructure for services such as ai, streaming, storage
+- Gain hands-on experience with enterprise systems
+- Document real-world troubleshooting and experience
+- Transition into more advanced infrastructure or AI engineering roles
+
 # Future Plans
+
+- Expand Proxmox cluster nodes
+- Implement VLAN segmentation into lab network
+- Implement real-time model switching for ai inference
+- Develop lan based streaming for live streams and media streams
