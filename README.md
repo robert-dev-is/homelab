@@ -62,7 +62,7 @@ AI Infrastructure:
   - This allows for chats to be accessed on multiple devices
   - Models are pulled from port broadcasted by AI-Node-01's llama service
   - Daily backups are run at 4AM, keeps last 14 backups, and are saved to NAS
- - Image Generation service hosted by ComfyUI
+- Image Generation service hosted by ComfyUI
   - LXC Container with Ubuntu 22.04 template using ROCm 6.3 as it's the last official version supported for the Mi60
   - Uses Stable Diffusion XL as main model for image generation
 
