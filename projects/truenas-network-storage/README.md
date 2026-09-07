@@ -72,7 +72,7 @@ This keeps client configuration simple and uses the protocol that fits each oper
 - [hardware-and-design.md](hardware-and-design.md) — hardware choices and external PCIe design
 - [storage-and-protocols.md](storage-and-protocols.md) — ZFS pools, shares, SMB, and NFS
 - [performance-and-testing.md](performance-and-testing.md) — observed storage and network performance
-- [lessons-learned.md](essons-learned.md) — design decisions, limitations, and takeaways
+- [lessons-learned.md](lessons-learned.md) — design decisions, limitations, and takeaways
 
 ## Status
 
