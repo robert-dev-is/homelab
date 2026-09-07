@@ -31,8 +31,8 @@ Talos Linux Kubernetes cluster used to host internal homelab infrastructure and 
 
 ## Documentation
 
-- [Architecture](docs/architecture.md)
-- [GitOps](docs/gitops.md)
-- [Networking and TLS](docs/tls-pki.md)
-- [Storage](docs/storage.md)
-- [Operations](docs/operations.md)
+- [Architecture](architecture.md)
+- [GitOps](gitops.md)
+- [Networking and TLS](tls-pki.md)
+- [Storage](storage.md)
+- [Operations](operations.md)
