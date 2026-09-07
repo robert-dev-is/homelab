@@ -51,12 +51,12 @@ homelab network.
 
 [View project →](projects/isolated-ai-agent-lab/)
 
-### GPU-Passthrough Gaming Infrastructure
-Proxmox-hosted gaming environment using GPU passthrough, NixOS,
-Sunshine/Moonlight streaming, CPU topology tuning, and dedicated
-rendering/encoding GPUs.
+### Game Streaming Infrastructure
+Virtualized gaming environment built on Proxmox, with NixOS as the VM OS,
+using GPU passthrough, dedicated AMD rendering and Intel Arc hardware encoding,
+CPU pinning, and Sunshine/Moonlight streaming.
 
-[View project →](projects/proxmox-game-stream-server/)
+[View project →](projects/game-streaming-infrastructure/)
 
 ### Observability Platform
 Centralized Prometheus and Grafana monitoring for Proxmox, Linux hosts,
