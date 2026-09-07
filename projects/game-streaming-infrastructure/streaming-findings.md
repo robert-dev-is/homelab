@@ -1,165 +1,99 @@
 # Streaming Findings
 
-This document records the most useful observations from testing the dual-GPU Sunshine/Moonlight architecture.
+This document records the most useful troubleshooting findings from the dual-GPU Sunshine/Moonlight architecture.
 
-These are **experimental observations from one system**, not universal performance claims.
+For the quantitative results behind these conclusions, see [performance.md](performance.md).
 
-## Test Architecture
+## 1. The Encoder Was Not the First Bottleneck
 
-```text
-RX 6700 XT
-└── game rendering
-      ↓
-PRIME / cross-GPU presentation
-      ↓
-Arc A380
-├── Labwc
-├── headless display
-└── Sunshine VAAPI encode
-      ↓
-Moonlight
-```
+The Intel Arc A380 was straightforward to enable under NixOS. After installing `intel-media-driver`, VAAPI exposed H.264, HEVC, HEVC Main10, and AV1 hardware encoding, and Sunshine detected the expected codec families through Intel's `iHD` driver.
 
-The game itself can remain smooth even when the stream delivery rate drops substantially.
+During poor high-resolution streaming, the Arc media engine was active but not fully saturated.
 
-## Encoder Validation
+That changed the investigation from "can the A380 encode this workload?" to "can frames reach the Arc-owned capture path quickly enough?"
 
-The Intel Arc A380 was straightforward to enable under NixOS.
+## 2. Stream Delivery Was Strongly Resolution-Dependent
 
-After installing `intel-media-driver`, VAAPI successfully exposed:
+The game itself could remain smooth while Sunshine's delivered frame rate fell sharply as the host virtual display resolution increased.
 
-- H.264 encode
-- HEVC encode
-- HEVC Main10 encode
-- AV1 encode
+The largest observed example was 4K120, where incoming stream frame rate fell to roughly 32 FPS while network drops remained at zero and client decode time stayed low.
 
-Sunshine successfully detected all three primary codec families through Intel's `iHD` driver.
+Reducing the host display resolution produced large improvements without changing the GPUs or encoder.
 
-During poor high-resolution streaming performance, `intel_gpu_top` did **not** show the Arc media engine fully saturated. This was an important clue that the encoder itself was not necessarily the limiting resource.
+That behavior made the cross-GPU presentation path a stronger suspect than raw game rendering or encoder throughput.
 
-## Resolution-Dependent Behavior
+## 3. Physical PCIe Topology Mattered
 
-The most important result was the strong relationship between host display resolution and delivered stream frame rate.
+The Arc A380 is currently connected through the B650 chipset at PCIe 4.0 x2, while the RX 6700 XT is CPU-direct at PCIe 4.0 x16.
 
-Observed examples during 120 FPS gaming:
+Because the Radeon renders the game while the Arc owns the desktop and Sunshine capture path, the design depends on cross-GPU presentation.
 
-| Host virtual display | Moonlight request | Approx. incoming FPS | Notes |
-|---|---|---:|---|
-| 3840×2160 @ 120 | 3840×2160 @ 120 | ~32 FPS | Severe host-side delivery drop |
-| 3200×1800 @ 120 | 2560×1440 @ 120 | ~84 FPS | Large improvement |
-| 2560×1440 @ 120 | 2560×1440 @ 120 | ~80–100 FPS | Much better, but not consistently 120 |
+The current topology therefore places the inter-GPU path behind a narrow chipset-connected link.
 
-The game itself remained capable of approximately 120 FPS during the lower incoming-FPS cases.
+This is a strong working hypothesis, not a final conclusion. PRIME/dma-buf behavior is more complicated than a simple full-frame copy, and CPU-direct x8/x8 testing is required before attributing all lost frames to raw PCIe bandwidth.
 
-Desktop-only streaming could also run substantially faster than streaming while a game was being rendered on the Radeon GPU.
+## 4. Reading the Whole PCIe Hierarchy Was Necessary
 
-This makes the cross-GPU presentation path a stronger suspect than the game's raw render performance.
+A direct `lspci -vv` query against the Arc endpoint reported a misleading internal x1 link.
 
-## Why PCIe Topology Matters
+Walking the PCIe tree and checking the Arc's upstream bridge showed the physical external connection actually negotiating at PCIe 4.0 x2, which matched the motherboard's electrical slot layout.
 
-The current physical layout is asymmetric:
+The useful lesson was to validate the entire device path rather than assuming the endpoint's first reported link width represented the motherboard slot.
 
-```text
-RX 6700 XT → CPU-direct PCIe 4.0 x16
-Arc A380   → chipset PCIe 4.0 x2
-```
+## 5. Gamescope Did Not Improve the Problem
 
-PCIe 4.0 x2 provides roughly 4 GB/s of theoretical bandwidth per direction before overhead.
+Gamescope was tested as an additional game-focused compositor layer, but it did not materially change the streaming behavior.
 
-For scale, a simple 32-bit 4K framebuffer is approximately 33 MB:
+That result helped eliminate game presentation inside Gamescope as the primary cause and kept the investigation focused on the cross-GPU, capture, and transport path.
 
-```text
-3840 × 2160 × 4 bytes ≈ 33 MB
-```
+Gamescope may still be useful for resolution control or game-specific presentation behavior, but it is not required for the current architecture.
 
-If an implementation had to move an entire uncompressed 32-bit frame for every refresh, the raw data rate would be approximately:
+## 6. Client Frame Pacing Can Fail Independently
 
-```text
-4K60  ≈ 2.0 GB/s
-4K120 ≈ 4.0 GB/s
-4K240 ≈ 8.0 GB/s
-```
+A separate Moonlight client issue initially looked like poor host streaming performance.
 
-Real PRIME/dma-buf behavior is more complicated than this simplified calculation and may use different formats, copies, or synchronization paths. The calculation is therefore **not proof of literal bus traffic**.
+The stream arrived with healthy decode and render times, but borderless/windowed presentation produced a large frame queue delay and visible choppiness.
 
-It does, however, explain why a chipset-connected PCIe 4.0 x2 display GPU is a poor topology for experimenting with very high-resolution cross-GPU presentation.
+Switching Moonlight to true fullscreen made the stream smooth immediately.
 
-## Planned Validation
-
-The next major test is to move both GPUs onto CPU-direct lanes:
-
-```text
-RX 6700 XT → CPU PCIe 4.0 x8
-Arc A380   → CPU PCIe 4.0 x8
-```
-
-PCIe 4.0 x8 provides roughly four times the lane bandwidth of the current x2 Arc connection.
-
-The same Sunshine/Moonlight tests will then be repeated at:
-
-- 1440p120
-- 1800p120
-- 4K120
-- 4K240
-
-If delivered frame rate improves dramatically with the same GPUs and software stack, that will provide much stronger evidence that the current limitation is inter-GPU topology rather than Arc encoding capability.
-
-## Client-Side Frame Pacing Lesson
-
-A separate issue was discovered on one Moonlight client.
-
-The stream could arrive correctly while still feeling visibly choppy. The client showed approximately 15–20 ms of average frame queue delay during a 120 FPS stream.
-
-Changing Moonlight from borderless/windowed presentation to true fullscreen made the stream feel smooth immediately.
-
-This is an important troubleshooting lesson:
-
-> A smooth host and healthy decoder do not guarantee smooth presentation on the client.
-
-When diagnosing Moonlight performance, distinguish between:
+When diagnosing Moonlight performance, the following should be treated as separate stages:
 
 1. host processing latency,
-2. network loss/latency,
-3. decode time,
-4. render time,
-5. frame queue delay / presentation pacing.
+2. network loss and latency,
+3. client decode time,
+4. client render time,
+5. frame queue delay and final presentation pacing.
 
-They can fail independently.
+A failure in one stage can look similar to a failure in another.
 
-## Network Observations
+## 7. Render-GPU Saturation Is a Separate Variable
 
-The current host uses 2.5 GbE rather than the previous 10GbE adapter.
+The Witcher 3 can drive the RX 6700 XT to approximately 99–100% utilization while producing roughly 80–100 FPS at 1440p.
 
-The stream itself is nowhere near saturating 2.5 GbE at typical Sunshine bitrates, so raw link capacity is not the primary concern for Moonlight traffic.
+That makes it a useful stress workload because there is little spare render-GPU headroom while frames are also being handed off to the Arc-owned presentation path.
 
-10GbE remains useful for the NAS-backed game library rather than being required by the video stream itself.
+If the same workload remains stuttery after the move to CPU-direct x8/x8, the next tests will focus on scheduling and synchronization rather than assuming the Arc encoder is at fault.
 
-## Storage Lesson: Bandwidth Is Not Everything
+## 8. The Network Was Not the High-Resolution Bottleneck
 
-Fallout 4 provided another useful performance lesson unrelated to GPU streaming.
+The current host uses 2.5GbE, but Moonlight stream bitrates remain far below that capacity.
 
-A heavily modded installation performed poorly from NAS storage despite low actual data throughput because the workload generated very large numbers of filesystem metadata operations.
+Problematic tests showed low network latency and no meaningful packet loss, so raw Ethernet bandwidth is not a good explanation for the high-resolution frame-delivery collapse.
 
-Moving the game and mod environment to local storage dramatically reduced launch time.
-
-The resulting storage policy is:
-
-- NAS by default.
-- Local storage for metadata-heavy or latency-sensitive workloads.
-
-This is a good reminder that a faster network does not automatically fix a workload dominated by filesystem latency.
+10GbE remains useful for NAS-backed game storage, installations, updates, and bulk transfers.
 
 ## Current Conclusions
 
 ### Confirmed
 
-- RX 6700 XT game rendering works correctly under passthrough.
+- RX 6700 XT rendering works correctly under passthrough.
 - Arc A380 passthrough works correctly.
 - NixOS + Intel `iHD` provides working H.264, HEVC, and AV1 hardware encoding.
-- Sunshine can capture the Labwc headless output through Wayland screencopy.
-- The Arc media engine is not necessarily saturated when high-resolution streaming performance collapses.
+- Sunshine captures the Labwc headless output through Wayland screencopy.
 - Stream delivery improves substantially as host resolution decreases.
-- Client presentation mode can independently create visible stutter even when decode performance is healthy.
+- The Arc media engine is not fully saturated during the known high-resolution failure case.
+- Client presentation mode can independently cause visible stutter.
+- Gamescope did not materially improve the observed host-side limitation.
 
 ### Strong Working Hypothesis
 
@@ -168,7 +102,7 @@ The current PCIe 4.0 x2 chipset path to the Arc A380 is a major limitation for h
 ### Not Yet Proven
 
 - That raw PCIe bandwidth alone explains all lost frames.
-- That CPU-direct x8/x8 will sustain 4K240.
-- That the Arc A380 media engine itself can encode the desired 4K240 workload under the final architecture.
+- That CPU-direct x8/x8 will eliminate all streaming stutter.
+- That the Arc A380 can sustain a single 4K240 encode workload under the final architecture.
 
 Those are the next experiments.
