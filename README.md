@@ -62,14 +62,14 @@ CPU pinning, and Sunshine/Moonlight streaming.
 Centralized Prometheus and Grafana monitoring for Proxmox, Linux hosts,
 virtual machines, containers, storage, and UPS telemetry.
 
-[View project →](projects/observability/)
+[View project →](projects/observability-platform/)
 
 ### Automated Documentation Pipeline
 NAS-hosted Markdown documentation automatically tracked in Git and pushed
 to Forgejo after a one-hour stability window to preserve useful history
 without generating excessive commits.
 
-[View project →](projects/documentation-automation/)
+[View project →](projects/automated-documentation-automation/)
 
 ## Architecture
 
