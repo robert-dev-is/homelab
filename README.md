@@ -69,7 +69,7 @@ NAS-hosted Markdown documentation automatically tracked in Git and pushed
 to Forgejo after a one-hour stability window to preserve useful history
 without generating excessive commits.
 
-[View project →](projects/automated-documentation-automation/)
+[View project →](projects/automated-documentation-pipeline/)
 
 ## Architecture
 
