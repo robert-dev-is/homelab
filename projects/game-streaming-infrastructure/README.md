@@ -168,3 +168,8 @@ Internal homelab documentation contains additional host-specific details, IP add
 **Active project.**
 
 The dual-GPU architecture works, Intel Arc hardware encoding works correctly under NixOS, and the remaining high-refresh limitation is being investigated as a PCIe topology problem rather than an encoder capability problem.
+
+## Documentation
+
+- [architecture.md](architecture.md) - Architecture, GPU roles, passthrough, CPU pinning and streaming path
+- [streaming-findings.md](streaming-findings.md) - Performance findings, bottlenecks, and troubleshooting results
