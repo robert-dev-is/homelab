@@ -35,14 +35,14 @@ Three-node Talos Kubernetes environment using Flux and Forgejo for GitOps,
 MetalLB, Traefik, NFS CSI-backed TrueNAS storage, and internal TLS.
 Vaultwarden currently runs as a production-like internal workload.
 
-[View project →](projects/kubernetes-platform/)
+[View project →](projects/kubernetes/)
 
 ### Local AI Infrastructure
 Self-hosted AI platform built around an AMD Instinct MI60 32GB accelerator,
 with llama.cpp, ComfyUI, Open WebUI, centralized model storage, and separate
 frontend and GPU-compute services.
 
-[View project →](projects/local-ai-infrastructure/)
+[View project →](projects/ai-infrastructure/)
 
 ### Isolated AI Agent Lab
 Network-segmented environment for experimenting with autonomous AI agents
@@ -56,7 +56,7 @@ Proxmox-hosted gaming environment using GPU passthrough, NixOS,
 Sunshine/Moonlight streaming, CPU topology tuning, and dedicated
 rendering/encoding GPUs.
 
-[View project →](projects/gpu-passthrough-gaming/)
+[View project →](projects/proxmox-game-stream-server/)
 
 ### Observability Platform
 Centralized Prometheus and Grafana monitoring for Proxmox, Linux hosts,
