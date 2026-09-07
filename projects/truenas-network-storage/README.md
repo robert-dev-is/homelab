@@ -68,11 +68,11 @@ This keeps client configuration simple and uses the protocol that fits each oper
 
 ## Project Documents
 
-- [architecture.md](projects/truenas-network-storage/architecture.md) — system layout and data paths
-- [hardware-and-design.md](projects/truenas-network-storage/hardware-and-design.md) — hardware choices and external PCIe design
-- [storage-and-protocols.md](projects/truenas-network-storage/storage-and-protocols.md) — ZFS pools, shares, SMB, and NFS
-- [performance-and-testing.md](projects/truenas-network-storage/performance-and-testing.md) — observed storage and network performance
-- [lessons-learned.md](projects/truenas-network-storage/lessons-learned.md) — design decisions, limitations, and takeaways
+- [architecture.md](architecture.md) — system layout and data paths
+- [hardware-and-design.md](hardware-and-design.md) — hardware choices and external PCIe design
+- [storage-and-protocols.md](storage-and-protocols.md) — ZFS pools, shares, SMB, and NFS
+- [performance-and-testing.md](performance-and-testing.md) — observed storage and network performance
+- [lessons-learned.md](essons-learned.md) — design decisions, limitations, and takeaways
 
 ## Status
 
