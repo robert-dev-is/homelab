@@ -172,4 +172,5 @@ The dual-GPU architecture works, Intel Arc hardware encoding works correctly und
 ## Documentation
 
 - [architecture.md](architecture.md) - Architecture, GPU roles, passthrough, CPU pinning and streaming path
+- [hardware-and-design.md](hardware-and-design.md) - Hardware selection, GPU roles, PCIe topology, and design decisions
 - [streaming-findings.md](streaming-findings.md) - Performance findings, bottlenecks, and troubleshooting results
