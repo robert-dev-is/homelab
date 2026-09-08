@@ -12,6 +12,8 @@ It queries Prometheus and presents infrastructure state through dashboards inten
   <img src="images/grafana.png" width="100%">
 </p>
 
+<br>
+
 ## Dashboards
 
 Dashboards prioritize:
