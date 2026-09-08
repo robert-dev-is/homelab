@@ -9,8 +9,14 @@ Proxmox Backup Server, TrueNAS/ZFS network storage, 10GbE networking,
 a Talos Kubernetes cluster, AMD Instinct GPU compute, centralized monitoring,
 and isolated environments for infrastructure and AI experimentation.
 
+## Physical Infrastructure
+
+The core lab is housed in a rack containing networking, compute, storage,
+AI acceleration, and power infrastructure, with several additional systems
+deployed separately where appropriate.
+
 <p align="center">
-  <img src="images/rack.jpeg" alt="Homelab infrastructure rack" width="700">
+  <img src="images/rack.jpeg" alt="Homelab infrastructure rack" width="500">
 </p>
 
 ## Lab at a Glance
