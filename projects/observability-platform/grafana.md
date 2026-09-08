@@ -24,8 +24,6 @@ Dashboards prioritize:
 - Historical context
 - At-a-glance infrastructure health
 
-## Current Dashboard Areas
-
 ### Nodes
 
 Host dashboards provide visibility into:
