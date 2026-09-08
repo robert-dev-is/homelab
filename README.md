@@ -34,11 +34,24 @@ deployed separately where appropriate.
 
 ## Featured Projects
 
+### Local AI Infrastructure
+Self-hosted AI platform built around an AMD Instinct MI60 32GB accelerator,
+with llama.cpp, ComfyUI, Open WebUI, centralized model storage, and separate
+frontend and GPU-compute services.
+
+[View project →](projects/ai-infrastructure/)
+
 ### TrueNAS Network Storage Architecture
 Compact virtualized storage system using PCIe passthrough, an LSI HBA,
 external OCuLink expansion, ZFS, SMB/NFS, and 10GbE networking.
 
 [View project →](projects/truenas-network-storage/)
+
+### Observability Platform
+Centralized Prometheus and Grafana monitoring for Proxmox, Linux hosts,
+virtual machines, containers, storage, and UPS telemetry.
+
+[View project →](projects/observability-platform/)
 
 ### Talos Kubernetes Platform
 Three-node Talos Kubernetes environment using Flux and Forgejo for GitOps,
@@ -47,32 +60,12 @@ Vaultwarden currently runs as a production-like internal workload.
 
 [View project →](projects/kubernetes/)
 
-### Local AI Infrastructure
-Self-hosted AI platform built around an AMD Instinct MI60 32GB accelerator,
-with llama.cpp, ComfyUI, Open WebUI, centralized model storage, and separate
-frontend and GPU-compute services.
-
-[View project →](projects/ai-infrastructure/)
-
 ### Isolated AI Agent Lab
 Network-segmented environment for experimenting with autonomous AI agents
 while providing only specifically permitted access to services on the primary
 homelab network.
 
 [View project →](projects/isolated-ai-agent-lab/)
-
-### Game Streaming Infrastructure
-Virtualized gaming environment built on Proxmox, with NixOS as the VM OS,
-using GPU passthrough, dedicated AMD rendering and Intel Arc hardware encoding,
-CPU pinning, and Sunshine/Moonlight streaming.
-
-[View project →](projects/game-streaming-infrastructure/)
-
-### Observability Platform
-Centralized Prometheus and Grafana monitoring for Proxmox, Linux hosts,
-virtual machines, containers, storage, and UPS telemetry.
-
-[View project →](projects/observability-platform/)
 
 ### Automated Documentation Pipeline
 NAS-hosted Markdown documentation automatically tracked in Git and pushed
@@ -81,7 +74,14 @@ without generating excessive commits.
 
 [View project →](projects/automated-documentation-pipeline/)
 
-## Architecture
+### Game Streaming Infrastructure
+Virtualized gaming environment built on Proxmox, with NixOS as the VM OS,
+using GPU passthrough, dedicated AMD rendering and Intel Arc hardware encoding,
+CPU pinning, and Sunshine/Moonlight streaming.
+
+[View project →](projects/game-streaming-infrastructure/)
+
+## Architecture Overview
 
 The lab separates physical roles for compute, storage, AI, media,
 infrastructure control, and gaming.
