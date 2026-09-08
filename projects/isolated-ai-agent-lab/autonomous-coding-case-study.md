@@ -17,7 +17,7 @@ The goal was to see how a local autonomous agent behaved when given a project la
 The project ran through:
 
 - Hermes Agent
-- local Qwen 27B-class inference
+- local Qwen 3.8 27B-class inference
 - llama.cpp
 - AMD Instinct MI60 with 32 GB HBM2
 - isolated Debian agent VM
