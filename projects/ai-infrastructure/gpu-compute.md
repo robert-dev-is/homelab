@@ -16,6 +16,14 @@ The node is used for:
 - thermal testing
 - model and context-size experiments
 
+## Physical Infrastructure
+
+The ai node is housed in a Silverstone RM4A 4U Chassis in the rack.
+
+<p align="center">
+  <img src="images/ai-node-01-in-rack.jpeg" alt="ai-node-01-in-rack" width="500">
+</p>
+
 ## Hardware
 
 Current core hardware:
