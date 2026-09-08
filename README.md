@@ -107,7 +107,7 @@ infrastructure control, and gaming.
 - Use snapshots and backups to make experimentation recoverable
 - Prefer transparent infrastructure that exposes how the underlying
   technology works
-- Document design decisions, troubleshooting, and lessons learned 
+- Document design decisions, troubleshooting, and lessons learned
 
 ## Current Development
 
