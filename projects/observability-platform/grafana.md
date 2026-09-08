@@ -28,6 +28,10 @@ Host dashboards provide visibility into:
 - Memory utilization
 - Memory utilization over time
 
+<p align="center">
+  <img src="images/grafana.png" width="75%">
+</p>
+
 ### Proxmox Guests
 
 Virtual machine and container views include:
