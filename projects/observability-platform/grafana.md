@@ -29,7 +29,7 @@ Host dashboards provide visibility into:
 - Memory utilization over time
 
 <p align="center">
-  <img src="images/grafana.png" width="75%">
+  <img src="images/grafana.png" width="100%">
 </p>
 
 ### Proxmox Guests
