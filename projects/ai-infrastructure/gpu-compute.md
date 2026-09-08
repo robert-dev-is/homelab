@@ -22,7 +22,7 @@ The host is housed in a Silverstone RM4A 4U Chassis in the rack.
 
 <p align="center">
   <img src="images/ai-node-01-open-chassis.jpeg" width="55%">
-  <img src="images/ai-node-01-in-rack.jpeg" width="45%">
+  <img src="images/ai-node-01-in-rack.jpeg" width="40%">
 </p>
 
 ## Hardware
