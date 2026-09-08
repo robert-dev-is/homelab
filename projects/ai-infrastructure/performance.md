@@ -24,17 +24,3 @@ These results reflect observed generation throughput on the current MI60-based l
 
 The large difference between the two models should not be interpreted as a direct model-to-model efficiency comparison. They use different architectures and quantizations, so the numbers are best treated as individual observed results rather than a controlled benchmark comparison.
 
-## Current Data Limitations
-
-At this point, these are the only performance figures being published for the platform.
-
-No additional repeatable measurements have been collected for:
-
-- prompt-processing speed
-- VRAM usage
-- power-limit scaling
-- thermal comparisons
-- context-size scaling
-- quantization comparisons
-- model load times
-- ComfyUI image-generation performance
