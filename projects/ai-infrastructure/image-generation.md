@@ -36,7 +36,6 @@ This makes it easier to understand and modify:
 - text encoding
 - sampling
 - VAE decode
-- LoRA application
 - image dimensions
 - conditioning
 - multi-stage workflows
@@ -107,8 +106,6 @@ A representative organization is:
 |
 +-- checkpoints/
 |
-+-- loras/
-|
 +-- vae/
 ```
 
@@ -119,17 +116,6 @@ This allows the ComfyUI environment to be rebuilt without re-downloading a large
 Checkpoint models are the primary diffusion model files.
 
 They can be significantly larger than ordinary application files, so treating them as persistent infrastructure data rather than disposable container data simplifies maintenance.
-
-## LoRAs
-
-LoRA files are also centralized.
-
-Benefits include:
-
-- one consistent library
-- easier backup
-- easier testing across workflows
-- no dependence on one ComfyUI container filesystem
 
 ## VAE Files
 
@@ -154,7 +140,6 @@ Important variables include:
 - image resolution
 - batch size
 - VAE behavior
-- LoRA use
 - model architecture
 - precision
 - intermediate tensors
