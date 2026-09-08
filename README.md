@@ -9,6 +9,10 @@ Proxmox Backup Server, TrueNAS/ZFS network storage, 10GbE networking,
 a Talos Kubernetes cluster, AMD Instinct GPU compute, centralized monitoring,
 and isolated environments for infrastructure and AI experimentation.
 
+<p align="center">
+  <img src="images/rack.jpeg" alt="Homelab infrastructure rack" width="700">
+</p>
+
 ## Lab at a Glance
 
 - 8 Proxmox VE hosts
