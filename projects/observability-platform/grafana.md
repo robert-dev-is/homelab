@@ -6,7 +6,11 @@ Grafana is the visualization layer of the observability platform.
 
 It queries Prometheus and presents infrastructure state through dashboards intended for quick operational awareness rather than excessive detail.
 
-## Dashboard Philosophy
+<p align="center">
+  <img src="images/grafana.png" width="100%">
+</p>
+
+## Dashboards
 
 Dashboards prioritize:
 
@@ -27,12 +31,6 @@ Host dashboards provide visibility into:
 - CPU utilization over time
 - Memory utilization
 - Memory utilization over time
-
-<br>
-
-<p align="center">
-  <img src="images/grafana.png" width="100%">
-</p>
 
 ### Proxmox Guests
 
