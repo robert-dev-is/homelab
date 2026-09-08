@@ -18,11 +18,11 @@ The node is used for:
 
 ## Physical Host
 
-The host is housed in a Silverstone RM4A 4U Chassis in the rack.
+The host is installed in a SilverStone RM4A 4U rackmount chassis, providing the airflow, component clearance, and serviceability needed for the AMD Instinct MI60.
 
 <p align="center">
-  <img src="images/ai-node-01-open-chassis.jpeg" width="55%">
-  <img src="images/ai-node-01-in-rack.jpeg" width="40%">
+  <img src="images/ai-node-01-open-chassis.jpeg" width="55%" align="middle">
+  <img src="images/ai-node-01-in-rack.jpeg" width="40%" align="middle">
 </p>
 
 ## Hardware
