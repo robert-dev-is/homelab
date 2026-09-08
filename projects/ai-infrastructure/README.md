@@ -222,11 +222,16 @@ The platform currently supports:
 
 ## Representative Performance
 
-One representative llama.cpp workload using a Qwen 3.6 35B A3B Q4_K_M model has reached approximately 83-84 tokens per second on the MI60 while using roughly 21 GB of VRAM.
+Observed llama.cpp inference performance on the AMD Instinct MI60 using the Vulkan backend includes:
 
-These figures are workload-specific and should not be treated as universal MI60 benchmark numbers. Exact performance depends on model architecture, quantization, context size, llama.cpp build, backend settings, and power configuration.
+| Model | Quantization | Generation Speed |
+|---|---|---:|
+| Qwen 3.8 27B | Q6 | ~17-19 tokens/sec |
+| Qwen 3.6 35B A3B | Q4 | ~83-84 tokens/sec |
 
-More detailed testing belongs in [performance.md](performance.md).
+These results are workload-specific and reflect observed generation throughput on the current `ai-node-01` inference stack. The two models use different architectures and quantizations, so the results should be treated as individual observations rather than a direct model-to-model benchmark comparison.
+
+Additional details are available in [performance.md](performance.md).
 
 ## Key Engineering Challenges
 
