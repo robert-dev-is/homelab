@@ -31,6 +31,10 @@ Proxmox VE
 
 Games are directed to the Radeon GPU while the Arc GPU owns the desktop and streaming path.
 
+### Physical Host
+
+The platform retains a conventional desktop form factor while housing both dedicated GPUs internally.
+
 <p align="center">
   <img src="images/gaming-stream-01.jpeg" width="45%">
   <img src="images/gaming-stream-01-side.jpeg" width="45%">
