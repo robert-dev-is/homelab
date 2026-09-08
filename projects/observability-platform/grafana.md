@@ -6,6 +6,7 @@ Grafana is the visualization layer of the observability platform.
 
 It queries Prometheus and presents infrastructure state through dashboards intended for quick operational awareness rather than excessive detail.
 
+
 <br>
 
 
