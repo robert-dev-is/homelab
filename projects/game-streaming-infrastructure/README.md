@@ -45,11 +45,12 @@ The node uses a conventional desktop case with both dedicated GPUs installed int
 | Component | Role |
 |---|---|
 | AMD Ryzen 9 7950X3D | Host CPU |
+| ASRock X870 Taichi Creator | Motherboard / PCIe platform |
 | AMD Radeon RX 6700 XT 12 GB | Game rendering |
 | Intel Arc A380 6 GB | Compositor, virtual display, capture, and hardware encoding |
 | 32 GB DDR5 | Host memory |
 | 1 TB NVMe SSD | Local VM/game storage |
-| 2.5 GbE | Current network connection |
+| 10 GbE | Current network connection |
 
 The gaming VM uses 16 vCPUs pinned to the 7950X3D's V-Cache CCD and receives both discrete GPUs through VFIO passthrough.
 
@@ -70,11 +71,22 @@ NixOS keeps the gaming environment reproducible and appliance-like. Intel Arc ha
 
 ## Current Engineering Focus
 
-The current motherboard connects the RX 6700 XT directly to the CPU at PCIe 4.0 x16, while the Arc A380 is limited to PCIe 4.0 x2 through the chipset.
+The current focus is no longer raw game performance or PCIe topology. The NixOS gaming VM is producing strong native game performance, and the move to the ASRock X870 Taichi Creator has given both GPUs CPU-direct PCIe 4.0 x8 links.
 
-That topology works, but high-resolution and high-refresh-rate testing has shown a strong resolution-dependent drop in delivered stream frame rate even when the game remains smooth and the Arc media engine is not saturated.
+The remaining work is focused on improving frame delivery through the split-GPU streaming pipeline:
 
-A platform revision has been ordered to move both GPUs onto CPU-connected PCIe lanes at x8/x8. The same workloads will then be retested at 1440p120, 4K120, and 4K240 to determine how much of the current limitation is caused by the cross-GPU PCIe path.
+```text
+RX 6700 XT
+└─ Game rendering
+   ↓
+Cross-GPU frame handoff
+   ↓
+Arc A380
+├─ Labwc / virtual display
+├─ Sunshine capture
+└─ Hardware encoding
+   ↓
+Moonlight
 
 ## Project Files
 
