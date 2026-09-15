@@ -87,6 +87,7 @@ Arc A380
 └─ Hardware encoding
    ↓
 Moonlight
+```
 
 ## Project Files
 
