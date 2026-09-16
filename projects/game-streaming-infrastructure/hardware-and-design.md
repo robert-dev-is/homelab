@@ -138,7 +138,9 @@ NAS storage
 └── default location for games and bulk storage
 
 Local NVMe
-└── latency-sensitive or metadata-heavy games and mod environments
+├── latency-sensitive or metadata-heavy games
+├── mod environments
+└── selected save-game / compatibility data
 ```
 
 Heavily modded Fallout 4 demonstrated that high sequential network throughput does not eliminate filesystem metadata latency. Moving that workload from NAS storage to local storage dramatically reduced launch time.
