@@ -15,15 +15,14 @@ Physical Host
 ┌──────────────────────────────────────────────┐
 │ Proxmox VE                                   │
 │                                              │
-│  Ryzen 9 7950X3D                             │
+│ Ryzen 9 7950X3D                              │
 │      │                                       │
-│      ├── RX 6700 XT ───────────────┐         │
-│      │                              │ VFIO    │
-│      └── Intel Arc A380 ────────────┤         │
-│                                     ▼         │
-│                          NixOS Gaming VM      │
+│      ├── PCIe 4.0 x8 → RX 6700 XT ───┐       │
+│      │                               │ VFIO  │
+│      └── PCIe 4.0 x8 → Arc A380 ─────┤       │
+│                                       ▼      │
+│                            NixOS Gaming VM   │
 └──────────────────────────────────────────────┘
-```
 
 Inside the guest:
 
@@ -53,7 +52,9 @@ cpu: host
 affinity: 0-7,16-23
 ```
 
-This keeps the gaming workload on the cache-equipped CCD rather than allowing it to move between CCDs. The second CCD remains available to the Proxmox host and other workloads.
+This keeps the gaming VM on the cache-equipped CCD rather than allowing its vCPUs to move between CCDs.
+
+CPU affinity constrains where the gaming VM may execute, but it does not exclusively reserve those host threads. Other substantial VM or container workloads can be pinned to the opposite CCD (`8-15,24-31`) when isolation from the gaming workload is desirable.
 
 ## GPU Passthrough
 
@@ -80,6 +81,50 @@ DRI_PRIME=pci-0000_01_00_0 %command%
 ```
 
 This is intentionally applied to games rather than the entire Steam process. Forcing the whole Steam UI onto the render GPU caused instability in Chromium/CEF-based Steam components during testing.
+
+## AMDGPU Queue Tuning
+
+The split-GPU design is sensitive not only to GPU throughput but also to queue latency on the RX 6700 XT.
+
+Under heavy game load, tracing showed that graphics work required by the cross-GPU frame handoff could remain queued for roughly 40 ms before execution even though the work itself took only a fraction of a millisecond to complete.
+
+The AMDGPU software queue is therefore tuned with:
+
+```text
+amdgpu.sched_jobs
+```
+
+The stock value of 32 allowed excessive queue-ahead for this workload. Testing with values of 8 and 4 substantially improved frame pacing and Moonlight incoming frame rate by limiting how much unfinished RX work can accumulate ahead of frame-handoff dependencies.
+
+Conceptually:
+
+```text
+Deep RX software queue
+        ↓
+Game work accumulates ahead of handoff work
+        ↓
+Cross-GPU dependency signals late
+        ↓
+Arc receives the frame late
+        ↓
+Moonlight incoming FPS falls
+```
+
+Reducing the queue depth applies stronger backpressure:
+
+```text
+Shallower RX software queue
+        ↓
+Less work queued ahead
+        ↓
+Frame-handoff dependencies complete sooner
+        ↓
+Arc capture / encode path receives frames more consistently
+```
+
+This does not directly cap game FPS. It changes how far GPU work is allowed to queue ahead of execution.
+
+The best queue depth is workload-dependent. Values of 4 and 8 are currently being evaluated, with both providing a substantial improvement over the stock value of 32.
 
 ## Wayland Desktop
 
